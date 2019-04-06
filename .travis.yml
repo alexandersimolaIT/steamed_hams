@@ -1,18 +1,32 @@
 language: android
+
+env:
+  global:
+    - ANDROID_API=23
+    - ANDROID_EMULATOR=23
+    - ANDROID_BUILD_TOOLS_VERSION=23.0.3
+    - ADB_INSTALL_TIMEOUT=20
+    - ANDROID_ABI=armeabi-v7a
+    - ANDROID_TAG=google_apis
+
 android:
   components:
   - tools
   - platform-tools
-  - build-tools-27.0.3
-  - android-28
-  - android-24
-  - sys-img-armeabi-v7a-android-24
-before_install:
-- cd steamed_hams
+  - build-tools-23.0.3
+  - android-$ANDROID_API
+  - android-$ANDROID_EMULATOR
+  - extra-android-support
+  - extra-google-m2repository
+  - extra-android-m2repository
+  - addon-google_apis-google-19
+  - sys-img-$ANDROID_ABI-$ANDROID_TAG-$ANDROID_EMULATOR
 before_script:
-- chmod +x gradlew
-- echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
-- emulator -avd test -no-window &
-- android-wait-for-emulator
-- adb shell input keyevent 82 &
+  - chmod +x gradlew
+  - echo no | android create avd --force -n test -t android-23 --abi armeabi-v7a
+  - emulator -avd test -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
 
+script:
+  - ./gradlew build
