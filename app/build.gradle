@@ -16,6 +16,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false // build will not fail if there is a lint error in the project
+    }
 }
 
 dependencies {
