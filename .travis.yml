@@ -11,9 +11,9 @@ cache:
   - "$HOME/.gradle/wrapper/"
   - "$HOME/.android/build-cache"
 env:
-  global:
+  global: # variabler för denna fil
   - ANDROID_API=23
-  - EMULATOR_API=23
+  - EMULATOR_API=21
   - ANDROID_BUILD_TOOLS=23.0.3
   - ADB_INSTALL_TIMEOUT=20 # minutes before terminating a test
   - ANDROID_ABI=armeabi-v7a
@@ -36,22 +36,21 @@ android:
     - android-sdk-license-.+
     - google-gdk-license-.+
 before_install:
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
-- chmod +x gradlew
-- ./gradlew dependencies || true
+  - mkdir "$ANDROID_HOME/licenses" || true
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e 1"\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - chmod +x gradlew
+  - ./gradlew dependencies || true
 before_script:
   - android list targets
   - echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR --abi $ANDROID_ABI --tag $ANDROID_TAG
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
-  - adb shell input keyevent 82 &
 script:
   - ./gradlew dependencyCheckAnalyze build # check that everything is available and a build is possible
   - adb shell input keyevent 82 # tell running environment to unlock itself (ie. as in unlocking a phone) because some test needs it to be unlocked.
   # PdisablePreDex should make testing go faster,
   # stacktrace prints the errors as stacktrace,
   # connectedCheck tells Travis to run the UI tests
-  - ./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
+  - ./gradlew clean build connectedCheck -PdisablePreDex --stacktrace"
 
