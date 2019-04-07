@@ -1,4 +1,6 @@
 language: android
+jdk: oraclejdk8
+sudo: required
 
 env:
   global:
@@ -29,4 +31,6 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew build
+  - ./gradlew clean dependencyCheckAnalyze build
+  - adb shell input keyevent 82
+  - ./gradlew connectedCheck -PdisablePreDex --stacktrace
