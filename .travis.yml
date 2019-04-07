@@ -29,7 +29,6 @@ android:
   - google-gdk-license-.+
 
 before_install:
-  - yes | sudo $ANDROID_HOME/tools/bin/sdkmanager --licenses
   - yes | sdkmanager "platforms;android-28"
 
 before_script:
