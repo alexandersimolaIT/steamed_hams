@@ -2,8 +2,9 @@ language: android
 jdk: oraclejdk8
 env:
   global:
-  - ANDROID_API_LEVEL=28
-  - ANDROID_BUILD_TOOLS_VERSION=28.0.3
+  - ANDROID_API=25
+  - ANDROID_EMULATOR=19
+  - ANDROID_BUILD_TOOLS_VERSION=25.0.2
 android:
   licenses:
   - android-sdk-preview-license-.+
@@ -15,24 +16,35 @@ android:
   # The BuildTools version used by your project
   - build-tools-$ANDROID_BUILD_TOOLS_VERSION
   # The SDK version used to compile your project
-  - android-$ANDROID_API_LEVEL
+  - android-$ANDROID_API
   # Additional components
   - extra-google-google_play_services
   - extra-google-m2repository
   - extra-android-m2repository
-  - addon-google_apis-google-$ANDROID_API_LEVEL
+  - addon-google_apis-google-$ANDROID_API
+  - sys-img-armeabi-v7a-google_apis-25
+
+# This part is supposed to make the build run faster by telling Travis to store some particular files instead of downloading them anew for each build.
 cache:
   directories:
   - $HOME/.m2
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
   - $HOME/.android/build-cache
+
 before_install:
   - chmod +x gradlew
-  - yes | sdkmanager "platforms;android-"$ANDROID_API_LEVEL
+  - yes | sdkmanager "platforms;android-"$ANDROID_API
+
 before_script:
   # Prepare pre-accepted licenses to not be promted at installation
   - mkdir -p "$ANDROID_HOME/licenses"
   - cp ./google-licenses/* "$ANDROID_HOME/licenses/"
+  # Launch emulator before the execution
+  - echo no | android create avd --force -n test -t android-25 --abi google_apis/armeabi-v7a
+  - emulator -avd test -no-audio -no-window &
+  - android-wait-for-emulator
+  - adb shell input keyevent 82 &
+
 script:
 - ./gradlew build check
