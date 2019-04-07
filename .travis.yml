@@ -8,7 +8,6 @@ env:
   - ANDROID_ABI=google_apis/armeabi-v7a
   - ANDROID_TAG=google_apis
   - ADB_INSTALL_TIMEOUT=20
-  - QEMU_AUDIO_DRV=none # Remove audio
 android:
   licenses:
   - android-sdk-preview-license-.+
