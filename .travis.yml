@@ -40,7 +40,7 @@ cache:
   - $HOME/.android/build-cache
 
 before_install:
-  - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "platforms;android-"$ANDROID_API
   - mkdir "$ANDROID-HOME/licenses" || true
 
 before_script:
@@ -52,7 +52,7 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew clean dependencyCheckAnalyze build
+  - ./gradlew clean dependencyCheckAnalyze build --stacktrace
   - adb shell input keyevent 82
   - ./gradlew connectedCheck -PdisablePreDex --stacktrace
 
