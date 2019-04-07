@@ -1,6 +1,5 @@
 language: android
 jdk: oraclejdk8
-sudo: false
 
 env:
   global:
@@ -44,6 +43,8 @@ before_install:
   - mkdir "$ANDROID-HOME/licenses" || true
 
 before_script:
+  - mkdir -p "$ANDROID_HOME/licenses"
+  - cp ./google-licenses/* "$ANDROID_HOME/licenses/"
   - chmod +x gradlew
   - android list targets
   - echo no | android create avd --force -n test -t "android-"$ANDROID_EMULATOR --abi $ANDROID_ABI --tag $ANDROID_TAG
@@ -52,8 +53,7 @@ before_script:
   - adb shell input keyevent 82 &
 
 script:
-  - ./gradlew clean dependencyCheckAnalyze build --stacktrace
-  - adb shell input keyevent 82
-  - ./gradlew connectedCheck -PdisablePreDex --stacktrace
+  - ./gradlew build check --stacktrace
+
 
 after_failure: "cat $TRAVIS_BUILD_DIR/app/gen_build/reports/lint_results.xml"
