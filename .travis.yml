@@ -26,12 +26,13 @@ cache:
 
 before_install:
   - yes | sdkmanager "platforms;android-28"
+  - yes | sdkmanager "platforms;android-24"
+  - chmod +x gradlew
 
 before_script:
   # Prepare pre-accepted licenses to not be prompted at installation
   - mkdir -p "$ANDROID_HOME/licenses"
   - cp ./google-licenses/* "$ANDROID_HOME/licenses/"
-  - chmod +x gradlew
   - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
   - emulator -avd test -no-window &
   - android-wait-for-emulator
