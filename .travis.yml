@@ -58,4 +58,6 @@ before_script:
 
 
 script:
-  - ./gradlew build check
+  - ./gradlew depencdencyCheckAnalyze build -- stacktrace
+  - adb shell input keyevent 82 &
+  - ./gradlew connectedCheck -PdisablePreDex --stacktrace
