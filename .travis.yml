@@ -26,7 +26,7 @@ cache:
 
 before_install:
   - yes | sdkmanager "platforms;android-28"
-  
+
 before_script:
   # Prepare pre-accepted licenses to not be prompted at installation
   - mkdir -p "$ANDROID_HOME/licenses"
@@ -37,3 +37,7 @@ before_script:
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
+script:
+  - ./gradlew depencdencyCheckAnalyze build -- stacktrace
+  - adb shell input keyevent 82 &
+  - ./gradlew connectedCheck -PdisablePreDex --stacktrace
