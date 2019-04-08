@@ -1,4 +1,16 @@
 language: android
+jdk: oraclejdk8
+
+env:
+  global:
+  - ANDROID_API=24
+  - ANDROID_EMULATOR=19
+  - ANDROID_BUILD_TOOLS_VERSION=27.0.3
+  - ANDROID_ABI=armeabi-v7a
+  - ANDROID_TAG=google_apis
+  - ADB_INSTALL_TIMEOUT=20
+  - QEMU_AUDIO_DRV=none
+
 android:
   licenses:
     - android-sdk-preview-license-.+
@@ -7,10 +19,16 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-27.0.3
+    - build-tools-$ANDROID_BUILD_TOOLS_VERSION
     - android-28
-    - android-24
-    - sys-img-armeabi-v7a-android-24
+    - android-$ANDROID_API
+    - sys-img-armeabi-v7a-android-$ANDROID_API
+    - extra-google-google_play_services
+    - extra-google-m2repository
+    - extra-android-m2repository
+    - addon-google_apis-google-$ANDROID_API
+    - sys-img-armeabi-v7a-google_apis-$ANDROID_API
+    - sys-img-x86-android-$ANDROID_API
 
 before_cache:
   -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -28,13 +46,13 @@ before_install:
   - ./gradlew dependencies || true
   - chmod +x gradlew
   - yes | sdkmanager "platforms;android-28"
-  - yes | sdkmanager "platforms;android-24"
+  - yes | sdkmanager "platforms;android-"$ANDROID_API
 
 before_script:
   # Prepare pre-accepted licenses to not be prompted at installation
   - mkdir -p "$ANDROID_HOME/licenses"
   - cp ./google-licenses/* "$ANDROID_HOME/licenses/"
-  - echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
+  - echo no | android create avd --force -n test -t android-$ANDROID_API --abi armeabi-v7a
   - emulator -avd test -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
