@@ -55,7 +55,7 @@ before_install:
   # Miscellaneous
   - ./gradlew dependencies || true
   - chmod +x gradlew
-  - yes | sdkmanager "platforms;android-"$ANDROID_API
+  #- yes | sdkmanager "platforms;android-"$ANDROID_API
   - yes | sdkmanager --licenses
 
 #before_script:
