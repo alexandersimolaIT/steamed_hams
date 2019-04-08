@@ -25,9 +25,10 @@ cache:
   - $HOME/.android/build-cache
 
 before_install:
+  - ./gradlew dependencies || true
+  - chmod +x gradlew
   - yes | sdkmanager "platforms;android-28"
   - yes | sdkmanager "platforms;android-24"
-  - chmod +x gradlew
 
 before_script:
   # Prepare pre-accepted licenses to not be prompted at installation
