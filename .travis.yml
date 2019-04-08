@@ -11,8 +11,22 @@ android:
     - android-28
     - android-24
     - sys-img-armeabi-v7a-android-24
+
+before_cache:
+  -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+# This part is supposed to make the build run faster by telling Travis to not upload new cache files each time.
+cache:
+  directories:
+  - $HOME/.m2
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
+
 before_install:
   - yes | sdkmanager "platforms;android-28"
+  
 before_script:
   # Prepare pre-accepted licenses to not be prompted at installation
   - mkdir -p "$ANDROID_HOME/licenses"
