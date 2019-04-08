@@ -1,65 +1,16 @@
 language: android
-jdk: oraclejdk8
-env:
-  global:
-  - ANDROID_API=21
-  - ANDROID_EMULATOR=19
-  - ANDROID_BUILD_TOOLS_VERSION=27.0.3
-  - ANDROID_ABI=armeabi-v7a
-  - ANDROID_TAG=google_apis
-  - ADB_INSTALL_TIMEOUT=20
-  - QEMU_AUDIO_DRV=none
 android:
-  licenses:
-  - android-sdk-preview-license-.+
-  - android-sdk-license-.+
-  - google-gdk-license-.+
   components:
-  # The BuildTools version used by your project
-  - build-tools-$ANDROID_BUILD_TOOLS_VERSION
-  # The SDK version used to compile your project
+  - tools
+  - platform-tools
+  - build-tools-27.0.3
   - android-28
-  - android-$ANDROID_API
-  # Additional components
-  - extra-google-google_play_services
-  - extra-google-m2repository
-  - extra-android-m2repository
-  - addon-google_apis-google-$ANDROID_API
-  - sys-img-armeabi-v7a-google_apis-$ANDROID_API
-  - sys-img-x86-android-$ANDROID_API
-  #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
-
-before_cache:
-  -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
-  -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-
-# This part is supposed to make the build run faster by telling Travis to not upload new cache files each time.
-cache:
-  directories:
-  - $HOME/.m2
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
-  - $HOME/.android/build-cache
-
-before_install:
-  #- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "./google-licenses/android-sdk-license"
-  #- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "./google-licenses/android-sdk-preview-license"
-  - ./gradlew dependencies || true
-  - chmod +x gradlew
-  - yes | sdkmanager "platforms;android-"$ANDROID_API
-
+  - android-24
+  - sys-img-armeabi-v7a-android-24
 before_script:
-  # Prepare pre-accepted licenses to not be prompted at installation
-  - mkdir -p "$ANDROID_HOME/licenses"
-  - cp ./google-licenses/* "$ANDROID_HOME/licenses/"
-  # Launch emulator before the execution
-  - echo no | android create avd --force -n test -t "android-"$ANDROID_API --abi $ANDROID_ABI --tag $ANDROID_TAG
-  - emulator -avd test -no-audio -no-window &
-  - travis_wait android-wait-for-emulator
-  - adb shell input keyevent 82 &
+- chmod +x gradlew
+- echo no | android create avd --force -n test -t android-24 --abi armeabi-v7a
+- emulator -avd test -no-window &
+- android-wait-for-emulator
+- adb shell input keyevent 82 &
 
-
-script:
-  - ./gradlew depencdencyCheckAnalyze build -- stacktrace
-  - adb shell input keyevent 82 &
-  - ./gradlew connectedCheck -PdisablePreDex --stacktrace
