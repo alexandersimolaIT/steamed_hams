@@ -3,9 +3,9 @@ jdk: oraclejdk8
 env:
   global:
   - ANDROID_API=25
-  - ANDROID_EMULATOR=19
+  - ANDROID_EMULATOR=21
   - ANDROID_BUILD_TOOLS_VERSION=25.0.2
-  - ANDROID_ABI=google_apis/armeabi-v7a
+  - ANDROID_ABI=armeabi-v7a
   - ANDROID_TAG=google_apis
   - ADB_INSTALL_TIMEOUT=20
 android:
@@ -26,10 +26,14 @@ android:
   - extra-google-m2repository
   - extra-android-m2repository
   - addon-google_apis-google-$ANDROID_API
-  - sys-img-armeabi-v7a-$ANDROID_TAG-$ANDROID_API
+  - sys-img-$ANDROID_EMULATOR-$ANDROID_TAG-$ANDROID_API
   #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
 
-# This part is supposed to make the build run faster by telling Travis to store some particular files instead of downloading them anew for each build.
+before_cache:
+  -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+  -rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+# This part is supposed to make the build run faster by telling Travis to not upload new cache files each time.
 cache:
   directories:
   - $HOME/.m2
@@ -38,6 +42,9 @@ cache:
   - $HOME/.android/build-cache
 
 before_install:
+  - echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+  - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
+  - ./gradlew dependencies || true
   - chmod +x gradlew
   - yes | sdkmanager "platforms;android-"$ANDROID_API
 
