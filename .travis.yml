@@ -4,7 +4,7 @@ env:
   global:
   - ANDROID_API=21
   - ANDROID_EMULATOR=19
-  - ANDROID_BUILD_TOOLS_VERSION=21.1.2
+  - ANDROID_BUILD_TOOLS_VERSION=27.0.3
   - ANDROID_ABI=armeabi-v7a
   - ANDROID_TAG=google_apis
   - ADB_INSTALL_TIMEOUT=20
@@ -18,15 +18,16 @@ android:
   # The BuildTools version used by your project
   - build-tools-$ANDROID_BUILD_TOOLS_VERSION
   # The SDK version used to compile your project
+  - android-28
   - android-$ANDROID_API
   # Additional components
   - extra-google-google_play_services
   - extra-google-m2repository
   - extra-android-m2repository
   - addon-google_apis-google-$ANDROID_API
-  #- sys-img-armeabi-v7a-google_apis-$ANDROID_API
+  - sys-img-armeabi-v7a-google_apis-$ANDROID_API
   - sys-img-x86-android-$ANDROID_API
-  - sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
+  #- sys-img-armeabi-v7a-addon-google_apis-google-$ANDROID_API
 
 before_cache:
   -rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
