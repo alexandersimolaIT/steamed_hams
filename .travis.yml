@@ -48,7 +48,7 @@ before_install:
   # Install the rest of tools (e.g. avdmanager)
   - sdkmanager tools
   # Install the system image.
-  - sdkmanager "system-images;android-24;default;armeabi-v7a"
+  - sdkmanager "system-images;android-$ANDROID_API;default;armeabi-v7a"
   # Create and start emulator for the script. Meant to race the install task.
   - echo no | avdmanager create avd --force -n emulatorApi24 -k "system-images;android-24;default;armeabi-v7a"
   - $ANDROID_HOME/emulator/emulator -avd emulatorApi24 -no-audio -no-window &
@@ -57,14 +57,6 @@ before_install:
   - chmod +x gradlew
   #- yes | sdkmanager "platforms;android-"$ANDROID_API
   - yes | sdkmanager --licenses
-
-#before_script:
-#- android-wait-for-emulator
-# Disable animations
-#- adb shell settings put global window_animation_scale 0 &
-#- adb shell settings put global transition_animation_scale 0 &
-#- adb shell settings put global animator_duration_scale 0 &
-#- adb shell input keyevent 82 &
 
 script: ./gradlew connectedAndroidTest # Run emulator tests
 
@@ -76,6 +68,3 @@ before_script:
   - emulator -avd test -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
-
-#script:
-#  - ./gradlew build check
