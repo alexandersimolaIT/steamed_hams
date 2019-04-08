@@ -18,6 +18,7 @@ android:
   - android-21
 before_install:
   - yes | sdkmanager "platforms;android-21"
+  - touch ~/.android/repositories.cfg
 script:
   - ./gradlew build connectedCheck
 after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
