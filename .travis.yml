@@ -21,8 +21,9 @@ android:
   - sys-img-x86-android-$ANDROID_API_LEVEL
   - sys-img-armeabi-v7a-android-17
 before_install:
-  - yes | sdkmanager "platforms;android-"$ANDROID_API_LEVEL
   - touch ~/.android/repositories.cfg
+  - yes | sdkmanager "platforms;android-"$ANDROID_API_LEVEL
+  
 script:
   - ./gradlew build connectedCheck -PdisablePreDex --stacktrace
 after_failure: "cat $TRAVIS_BUILD_DIR/app/build/outputs/lint-results-debug.xml"
