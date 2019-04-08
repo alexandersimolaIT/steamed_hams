@@ -26,7 +26,7 @@ android:
     - android-$ANDROID_API
     - extra
     - add-on
-    - sys-img-armeabi-v7a-google_apis-$ANDROID_API
+    - sys-img-armeabi-v7a-google_apis-$ANDROID_EMULATOR
     - sys-img-x86-android-$ANDROID_API
 
 before_cache:
