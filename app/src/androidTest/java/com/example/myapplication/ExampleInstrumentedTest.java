@@ -23,4 +23,6 @@ public class ExampleInstrumentedTest {
 
         assertEquals("com.example.myapplication", appContext.getPackageName());
     }
+
+    public void user_can_enter_first_name() {}
 }

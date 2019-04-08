@@ -33,6 +33,7 @@ cache:
   - $HOME/.android/build-cache
 
 before_install:
+  - chmod +x gradlew # to fix error: /home/travis/.travis/functions: line 104: ./gradlew: Permission denied
   - touch ~/.android/repositories.cfg
   - yes | sdkmanager "platforms;android-"$ANDROID_API_LEVEL
 
